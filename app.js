@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const availableNFB = require("./routes/availableNFB");
 const soldNFB = require("./routes/soldNFB");
 const sellNFB = require("./routes/sellNFB");
+const resellNFB = require("./routes/resellNFB");
 const cors = require("cors");
 
 require("dotenv/config");
@@ -20,7 +21,7 @@ const connectDB = async () => {
       useUnifiedTopology: true,
     });
 
-    console.log(db);
+    console.log("DB connected");
   } catch (e) {
     console.log(e);
   }
@@ -35,6 +36,7 @@ app.get("/", (req, res) => {
 app.use("/soldNFB", soldNFB);
 app.use("/availableNFB", availableNFB);
 app.use("/sell", sellNFB);
+app.use("/resell", resellNFB);
 
 app.use("/sold", (req, res) => {
   res.send("Sold");

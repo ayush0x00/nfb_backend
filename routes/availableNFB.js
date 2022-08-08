@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   const data = await nfbSchema.find({ isAvailable: true });
-  console.log(data);
+  console.log("GET request for availableNFB");
   res.send(data);
 });
 
