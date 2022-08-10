@@ -2,12 +2,14 @@ const express = require("express");
 const nfbSchema = require("../schema/nfbSchema");
 const router = express.Router();
 const abi = require("./abi.json");
-var Web3 = require("web3");
-const contractAddress = "0xE71347Bb70d548B4a0C92cE753dC7DBF132318dC";
+const ethers = require("ethers");
+const contractAddress = "0xbF094728f66dB965dA606b4085A90e6212990c5B";
+// main net : https://bsc-dataseed.binance.org/
+const provider = new ethers.providers.JsonRpcProvider("http://localhost:7545");
+// const web3_bsc = new Web3("https://data-seed-prebsc-1-s1.binance.org:8545/");
+const contract = new ethers.Contract(contractAddress, abi, provider);
 const adminAddress = "admin";
 // main net : https://bsc-dataseed.binance.org/
-const web3_bsc = new Web3("https://data-seed-prebsc-1-s1.binance.org:8545/");
-const contract = new web3_bsc.eth.Contract(abi, contractAddress);
 const LightCertUrl =
   "https://nfb-mages.s3.us-east-2.amazonaws.com/LightCert.png";
 const LightCertSoldUrl =
@@ -15,9 +17,10 @@ const LightCertSoldUrl =
 const DarkCertSoldUrl =
   "https://nfb-mages.s3.us-east-2.amazonaws.com/DarkCertSold.png";
 
-router.post("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const owner = await contract.methods.ownerOf(req.params.id).call();
+    const owner = await contract.ownerOf(req.params.id);
+    console.log(owner);
     if (owner != adminAddress) {
       const nfb = await nfbSchema.findOne({ bondId: req.params.id });
       nfb.isAvailable = false;

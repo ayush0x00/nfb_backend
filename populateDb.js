@@ -11,6 +11,20 @@ const DarkCertSoldUrl =
 const DarkCertUrl = "https://nfb-mages.s3.us-east-2.amazonaws.com/DarkCert.png";
 const nfbLimit = 100;
 
+let priceInCd3Fi = [1000.0];
+let roundedPrice = [1000.0];
+let increment = 10001;
+
+function generatePrice() {
+  for (let i = 1; i <= nfbLimit; i++) {
+    priceInCd3Fi[i] = (priceInCd3Fi[i - 1] * increment) / 10000;
+    roundedPrice[i] = (
+      Math.round((priceInCd3Fi[i] + Number.EPSILON) * 100) / 100
+    ).toFixed(2);
+    increment += 1;
+  }
+}
+
 async function connect() {
   try {
     await mongoose.connect(process.env.DB_CONN, {
@@ -35,7 +49,7 @@ async function populateDb(i) {
           ? LightCertSoldUrl
           : DarkCertSoldUrl,
       owner: "admin",
-      price: "2222",
+      price: roundedPrice[i],
       isAvailable: i % 3 == 0 ? true : false,
       bondId: i,
       timestamp: Date.now(),
@@ -49,7 +63,9 @@ async function populateDb(i) {
 async function test() {
   try {
     await connect();
-    for (let i = 1; i <= nfbLimit; i++) {
+    generatePrice();
+    // printPrice();
+    for (let i = 0; i < nfbLimit; i++) {
       console.log("Awaiting save....", i);
       await populateDb(i);
     }
