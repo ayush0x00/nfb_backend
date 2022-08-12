@@ -3,9 +3,11 @@ const nfbSchema = require("../schema/nfbSchema");
 const router = express.Router();
 const abi = require("./abi.json");
 const ethers = require("ethers");
-const contractAddress = "0xbF094728f66dB965dA606b4085A90e6212990c5B";
+const contractAddress = "0x714131c8967663428E4e3bfFC39DC96C743943D2";
 // main net : https://bsc-dataseed.binance.org/
-const provider = new ethers.providers.JsonRpcProvider("http://localhost:7545");
+const provider = new ethers.providers.JsonRpcProvider(
+  "https://data-seed-prebsc-1-s1.binance.org:8545/"
+);
 // const web3_bsc = new Web3("https://data-seed-prebsc-1-s1.binance.org:8545/");
 const contract = new ethers.Contract(contractAddress, abi, provider);
 
